@@ -36,7 +36,7 @@ class Database
     public function getRows()
     {
         try {
-        	$sql = 'SELECT * FROM accounts';
+        	$sql = 'SELECT * FROM accounts where id < 6';
             $stmt = $this->datab->prepare($sql);
             $stmt->execute();
             $resultset=$stmt->fetchAll();
@@ -47,9 +47,52 @@ class Database
     }
 
     
+    public function getCount()
+	{
+		try {
+        	$sql = 'SELECT count(*) FROM accounts where id < 6';
+            $stmt = $this->datab->prepare($sql);
+            $stmt->execute();
+            $resultset=$stmt->fetch();
+            return $resultset;
+        	} 
+        	catch (PDOException $e) 
+        	{
+            throw new Exception($e->getMessage());
+        	}
+    			
+	}
+
+
+	
 }
 
+
+
+
+$count=$db->getCount();
+print_r($count);
 $result=$db->getRows();
-    print_r($result);
+    //print_r($result);
+
+
+echo "<table border=1>";
+echo "<tr><th>ID</th><th>Email</th><th>First Name</th><th>Last Name</th><th>Phone</th><th>Birth Date</th><th>Gender</th><th>Password</th></tr>";
+
+
+foreach( $result as $row) {
+    echo "<tr>";
+    echo "<td>".$row['id']."</td>";
+    echo "<td>".$row['email']."</td>";
+    echo "<td>".$row['fname']."</td>";
+    echo "<td>".$row['lname']."</td>";
+    echo "<td>".$row['phone']."</td>";
+    echo "<td>".$row['birthday']."</td>";
+    echo "<td>".$row['gender']."</td>";
+    echo "<td>".$row['password']."</td>";
+    echo "</tr>";
+}
+
+echo "</table>";
 
 ?>
